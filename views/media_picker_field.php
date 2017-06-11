@@ -20,7 +20,7 @@ $media_count = count( array_filter( explode( ',', $field_settings['value']['imag
 			</div>
 			<div class="modal-body">
 				<input type="text" class="large-text code acf-imp-username" placeholder="<?php esc_attr_e( 'Instagram Username', ACF_IMP_DOMAIN ); ?>"
-				       data-target-input="<?php echo $field_settings['id']; ?>-username">
+				       data-username-input="<?php echo $field_settings['id']; ?>-username">
 				<ul class="acf-imp-media-items"></ul>
 				<div class="acf-imp-loading"></div>
 				<button type="button" class="button center-block acf-imp-load-more" data-max-id=""><?php _e( 'Load Items', ACF_IMP_DOMAIN ); ?></button>

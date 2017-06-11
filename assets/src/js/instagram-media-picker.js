@@ -153,7 +153,7 @@
 				}
 			} else {
 				// bind value
-				$( '#' + $this.data( 'value-input' ) ).val( $this.val() );
+				$( '#' + $this.data( 'username-input' ) ).val( $this.val() );
 			}
 		} )
 		// on loading
@@ -167,7 +167,7 @@
 	} );
 
 	if ( !Array.prototype.filter ) {
-		Array.prototype.filter = function ( fun/*, thisArg*/ ) {
+		Array.prototype.filter = function ( callback ) {
 			'use strict';
 
 			if ( this === void 0 || this === null ) {
@@ -176,7 +176,7 @@
 
 			var t   = Object( this );
 			var len = t.length >>> 0;
-			if ( typeof fun !== 'function' ) {
+			if ( typeof callback !== 'function' ) {
 				throw new TypeError();
 			}
 
@@ -191,7 +191,7 @@
 					//       properties on Object.prototype and Array.prototype.
 					//       But that method's new, and collisions should be
 					//       rare, so use the more-compatible alternative.
-					if ( fun.call( thisArg, val, i, t ) ) {
+					if ( callback.call( thisArg, val, i, t ) ) {
 						res.push( val );
 					}
 				}
