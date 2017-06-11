@@ -15,5 +15,17 @@ class Backend extends Component
 	protected function init()
 	{
 		parent::init();
+
+		add_action( 'acf/include_field_types', [ &$this, 'register_new_field' ] );
+	}
+
+	/**
+	 * Register the new field type
+	 *
+	 * @return void
+	 */
+	public function register_new_field()
+	{
+		acf_register_field_type( new ACF_Field_Instagram_Media_Picker() );
 	}
 }

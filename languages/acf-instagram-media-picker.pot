@@ -1,0 +1,104 @@
+# Copyright (C) 2017 Nabeel Molham
+# This file is distributed under the GNU General Public License, version 3, http://www.gnu.org/licenses/gpl-3.0.en.html.
+msgid ""
+msgstr ""
+"Project-Id-Version: ACF Instagram Media Picker 1.0.0\n"
+"Report-Msgid-Bugs-To: "
+"https://wordpress.org/support/plugin/acf-instagram-media-picker\n"
+"POT-Creation-Date: 2017-06-11 10:59:20+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: \n"
+"Language-Team: Nabeel Molham <n.molham@gmail.com>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+
+#: acf-instagram-media-picker.php:113
+msgid "Template <code>%s</code> File not found, calculated path: <code>%s</code>"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:20
+msgid "Instagram Media Picker"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:27
+msgid "Browse Images"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:81
+msgid "Media Type"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:82
+msgid "What type of instagram media type to choose from?"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:86
+msgid "Image"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:87
+msgid "Video"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:93
+msgid "Number of Media Items"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:94
+msgid "How many items required to be picked?"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:104
+msgid "Browse button label"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:105
+msgid "What is the label of the media browse button?"
+msgstr ""
+
+#: views/media_item_template.php:14
+msgid "Select"
+msgstr ""
+
+#: views/media_picker_field.php:15
+msgid "Close"
+msgstr ""
+
+#: views/media_picker_field.php:21
+msgid "Load More"
+msgstr ""
+
+#: views/media_picker_field.php:24
+msgid "Done"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "ACF Instagram Media Picker"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Allowed user to select media (image/video) from their Instagram account to "
+"submit"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Nabeel Molham"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://nabeel.molham.me/"
+msgstr ""
