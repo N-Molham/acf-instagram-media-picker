@@ -4,25 +4,25 @@
  * Date: 2016-01-22
  * Time: 2:38 AM
  *
- * @package WP_Plugins\Boilerplate
+ * @package ACF\Add_Ons\Instagram_Media_Picker
  */
 
-use WP_Plugins\Boilerplate\Component;
-use WP_Plugins\Boilerplate\Plugin;
+use ACF\Add_Ons\Instagram_Media_Picker\Component;
+use ACF\Add_Ons\Instagram_Media_Picker\Plugin;
 
-if ( !function_exists( 'wp_plugin_boilerplate' ) ):
+if ( !function_exists( 'acf_instagram_media_picker' ) ):
 	/**
 	 * Get plugin instance
 	 *
 	 * @return Plugin
 	 */
-	function wp_plugin_boilerplate()
+	function acf_instagram_media_picker()
 	{
 		return Plugin::get_instance();
 	}
 endif;
 
-if ( !function_exists( 'wppb_component' ) ):
+if ( !function_exists( 'acf_imp_component' ) ):
 	/**
 	 * Get plugin component instance
 	 *
@@ -30,18 +30,18 @@ if ( !function_exists( 'wppb_component' ) ):
 	 *
 	 * @return Component|null
 	 */
-	function wppb_component( $component_name )
+	function acf_imp_component( $component_name )
 	{
-		if ( isset( wp_plugin_boilerplate()->$component_name ) )
+		if ( isset( acf_instagram_media_picker()->$component_name ) )
 		{
-			return wp_plugin_boilerplate()->$component_name;
+			return acf_instagram_media_picker()->$component_name;
 		}
 
 		return null;
 	}
 endif;
 
-if ( !function_exists( 'wppb_view' ) ):
+if ( !function_exists( 'acf_imp_view' ) ):
 	/**
 	 * Load view
 	 *
@@ -51,7 +51,7 @@ if ( !function_exists( 'wppb_view' ) ):
 	 *
 	 * @return void
 	 */
-	function wppb_view( $view_name, $args = null, $return = false )
+	function acf_imp_view( $view_name, $args = null, $return = false )
 	{
 		if ( $return )
 		{
@@ -59,7 +59,7 @@ if ( !function_exists( 'wppb_view' ) ):
 			ob_start();
 		}
 
-		wp_plugin_boilerplate()->load_view( $view_name, $args );
+		acf_instagram_media_picker()->load_view( $view_name, $args );
 
 		if ( $return )
 		{
@@ -69,14 +69,14 @@ if ( !function_exists( 'wppb_view' ) ):
 	}
 endif;
 
-if ( !function_exists( 'wppb_version' ) ):
+if ( !function_exists( 'acf_imp_version' ) ):
 	/**
 	 * Get plugin version
 	 *
 	 * @return string
 	 */
-	function wppb_version()
+	function acf_imp_version()
 	{
-		return wp_plugin_boilerplate()->version;
+		return acf_instagram_media_picker()->version;
 	}
 endif;

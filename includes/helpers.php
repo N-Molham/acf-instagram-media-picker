@@ -1,11 +1,11 @@
-<?php namespace WP_Plugins\Boilerplate;
+<?php namespace ACF\Add_Ons\Instagram_Media_Picker;
 
 /**
  * Class Helpers
  *
  * @since 1.0
  *
- * @package WP_Plugins\Boilerplate
+ * @package ACF\Add_Ons\Instagram_Media_Picker
  */
 final class Helpers
 {
@@ -14,7 +14,7 @@ final class Helpers
 	 *
 	 * @var string
 	 */
-	public static $text_domain = WPPB_DOMAIN;
+	public static $text_domain = ACF_IMP_DOMAIN;
 
 	/**
 	 * Enqueue path
@@ -39,7 +39,7 @@ final class Helpers
 	{
 		if ( null === self::$enqueue_path )
 		{
-			self::$enqueue_path = sprintf( '%s/assets/%s/', untrailingslashit( WPPB_URI ), self::is_script_debugging() ? 'src' : 'dist' );
+			self::$enqueue_path = sprintf( '%s/assets/%s/', untrailingslashit( ACF_IMP_URI ), self::is_script_debugging() ? 'src' : 'dist' );
 		}
 
 		return self::$enqueue_path;
@@ -55,14 +55,14 @@ final class Helpers
 		if ( null === self::$assets_version )
 		{
 			// assets version file
-			$version_file = WPPB_DIR . 'assets/last_update';
+			$version_file = ACF_IMP_DIR . 'assets/last_update';
 
 			// read from file
 			self::$assets_version = file_exists( $version_file ) && is_readable( $version_file ) ? sanitize_key( file_get_contents( $version_file ) ) : null;
 			if ( empty( self::$assets_version ) )
 			{
 				// fallback to plugin version
-				self::$assets_version = wppb_version();
+				self::$assets_version = acf_imp_version();
 			}
 		}
 

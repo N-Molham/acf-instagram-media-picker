@@ -13,7 +13,7 @@ var plugin_args = {
 	exclude      : [ // excluded files and directory from parsing
 		'vendor/' // composer libs vendor dir
 	],
-	main_file    : 'init.php', // plugin main file ( with plugin description comment doc )
+	main_file    : 'acf-instagram-media-picker.php', // plugin main file ( with plugin description comment doc )
 	watch_files  : {
 		assets : [
 			'assets/src/css/**/*.css',

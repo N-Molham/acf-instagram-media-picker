@@ -1,9 +1,9 @@
-<?php namespace WP_Plugins\Boilerplate;
+<?php namespace ACF\Add_Ons\Instagram_Media_Picker;
 
 /**
  * Base Component
  *
- * @package WP_Plugins\Boilerplate
+ * @package ACF\Add_Ons\Instagram_Media_Picker
  */
 class Component extends Singular
 {
