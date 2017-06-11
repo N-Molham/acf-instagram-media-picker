@@ -34,11 +34,21 @@ class Ajax_Handler extends Component
 	 */
 	public function fetch_instagram_media_items()
 	{
-		// logged-in user ID
-		$user_id = get_current_user_id();
-		$max_id  = sanitize_key( (string) filter_input( INPUT_POST, 'max_id', FILTER_SANITIZE_STRING ) );
+		if ( false === check_admin_referer( 'acf_imp_fetch_media', 'nonce' ) )
+		{
+			// access error
+			$this->error( __( 'Invalid access!' ) );
+		}
 
-		$media_items = slc_user()->fetch_instagram_recent_media_items( $user_id, 9, $max_id );
+		$username = preg_replace( '/[^a-zA-Z0-9\._]/', '', (string) filter_input( INPUT_POST, 'username', FILTER_SANITIZE_STRING ) );
+
+		if ( empty( $username ) || strlen( $username ) < 3 )
+		{
+			// username error
+			$this->error( __( 'Invalid username!', ACF_IMP_DOMAIN ) );
+		}
+
+		$media_items = acf_imp_instagram()->fetch_instagram_recent_media_items( $username );
 		if ( is_wp_error( $media_items ) )
 		{
 			// error loading media

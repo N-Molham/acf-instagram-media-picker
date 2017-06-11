@@ -50,6 +50,11 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 	 */
 	public function render_field( $field_settings )
 	{
+		$field_settings['value'] = wp_parse_args( $field_settings['value'], [
+			'images'   => '',
+			'username' => '',
+		] );
+
 		acf_imp_view( 'media_picker_field', compact( 'field_settings' ) );
 	}
 
@@ -89,6 +94,7 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 
 		wp_localize_script( 'acf-imp-media-picker', 'acf_imp_media_picker', [
 			'ajax_url'   => admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ),
+			'ajax_nonce' => wp_create_nonce( 'acf_imp_fetch_media' ),
 			'field_name' => $this->name,
 		] );
 	}

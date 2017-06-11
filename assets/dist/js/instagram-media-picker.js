@@ -3,45 +3,55 @@
  */
 !function(a,b,c,d){"use strict";b(function(){
 // vars
-var a=null,c=null,e=null,f=b("#acf-imp-media-item-template").html();
+var a=null,c=null,e=null,f=null,g=null,h=!1,i=b("#acf-imp-media-item-template").html();
 // on browse modal open
-b(".acf-fields").on("show.bs.modal",".acf-imp-browse-modal",function(){
+b(".acf-fields").on("show.bs.modal",".acf-imp-browse-modal",function(d){
 // trigger load on
-var d=b(this),e=d.find(".acf-imp-load-more");
+var g=b(this),h=g.find(".acf-imp-load-more");
 // current focused field input & value
-a=b("#"+d.data("target-input")),c=a.val().split(",").filter(function(a){return a.trim().length>0}),0===e.attr("data-max-id").length&&
+c=b(d.relatedTarget),a=b("#"+g.data("value-input")),f=b("#"+g.data("username-input")),e=a.val().split(",").filter(function(a){return a.trim().length>0}),g.find(".acf-imp-username").val(f.val()),0===h.attr("data-max-id").length&&
 // trigger media load on first open
-e.trigger("acf-imp-click",[d])}).on("acf-imp-update-value",".acf-imp-browse-modal",function(){
+h.trigger("acf-imp-click",[g])}).on("acf-imp-update-value",".acf-imp-browse-modal",function(){var d=b(this).find("input[type=checkbox]:checked");d.length>b(this).data("media-limit")?
+// limit reached
+d.each(function(a,b){e.indexOf(b.value)<0&&(
+// remove selection from over limit
+b.checked=!1)}):(
 // fetch values
-c=b(this).find("input[type=checkbox]:checked").map(function(a,b){return b.value}).toArray(),
+e=d.map(function(a,b){return b.value}).toArray(),
 // update field
-a.val(c.join(","))}).on("change",".acf-imp-media-item input[type=checkbox]",function(a){
+a.val(e.join(",")),e.length&&
+// set selected media count
+c.text(c.data("browse-label")+" ("+e.length.toString()+")"))}).on("change",".acf-imp-media-item input[type=checkbox]",function(a){
 // trigger field value update
-b(this).closest(".acf-imp-browse-modal").trigger("acf-imp-update-value")}).on("acf-imp-load-media",".acf-imp-browse-modal",function(){var a=b(this),c=a.find(".acf-imp-username").val().trim().replace(/[^a-zA-Z0-9\._]/g,""),d=a.find(".acf-imp-load-more");
+b(this).closest(".acf-imp-browse-modal").trigger("acf-imp-update-value")}).on("acf-imp-load-media",".acf-imp-browse-modal",function(){var a=b(this),c=a.find(".acf-imp-username").val().trim().replace(/[^a-zA-Z0-9\._]/g,""),d=a.find(".acf-imp-load-more");if(c.length<3)
+// invalid username!
+return!0;g&&
 // terminate previous ongoing request
+g.abort(),
 // enable loading status
+a.trigger("acf-imp-loading"),h=!0;var f=a.find(".acf-imp-media-items").addClass("hide");
 // load data
-return c.length<3||(e&&e.abort(),a.trigger("acf-imp-loading"),void(e=b.post(acf_imp_media_picker.ajax_url,{action:"fetch_instagram_media_items",username:c,max_id:d.attr("data-max-id")},function(b){if(b.success){
+g=b.post(acf_imp_media_picker.ajax_url,{action:"fetch_instagram_media_items",nonce:acf_imp_media_picker.ajax_nonce,username:c},function(a){if(a.success){
 // walk through items list
-for(var c=null,e=[],g=0,h=b.data.media_items.length;g<h;g++)c=b.data.media_items[g],
+for(var b=null,c=[],g=0,h=a.data.length;g<h;g++)b=a.data[g],
 // fill in placeholders
-e.push(f.replace(/\{id\}/g,c.media_id).replace("{type}",c.media_type).replace("{thumbnail}",c.image.thumbnail).replace(/\{caption\}/g,c.caption).replace("{likes}",c.counts.likes).replace("{comments}",c.counts.comments));
+c.push(i.replace(/\{code\}/g,b.code).replace("{type}",b.type).replace("{thumbnail}",b.image.thumbnail).replace("{likes}",b.counts.likes).replace("{comments}",b.counts.comments).replace("{checked}",e.indexOf(b.code)>-1?'checked="checked"':""));
 // append the new items
-a.find(".acf-imp-media-items").append(e.join("")),b.data.next_max_id?
-// update load more data
-d.attr("data-max-id",b.data.next_max_id):
+f.html(c.join("")),
 // no more to load after that
 d.addClass("hidden")}else
 // error loading data
-alert(b.data)},"json").always(function(){
+alert(a.data)},"json").always(function(){
 // disable loading status
-a.trigger("acf-imp-loading-done")})))}).on("click acf-imp-click",".acf-imp-load-more",function(a,c){d===c&&(c=b(this).closest(".acf-imp-browse-modal")),
+a.trigger("acf-imp-loading-done"),h=!1,f.removeClass("hide")})}).on("click acf-imp-click",".acf-imp-load-more",function(a,c){d===c&&(c=b(this).closest(".acf-imp-browse-modal")),
 // load first/more media
-c.trigger("acf-imp-load-media")}).on("keydown",".acf-imp-username",function(a){13===a.keyCode&&(
+c.trigger("acf-imp-load-media")}).on("keydown keyup",".acf-imp-username",function(a){var c=b(this);"keydown"===a.type&&13===a.keyCode?(
 // prevent from submitting the form
-a.preventDefault(),
+a.preventDefault(),!1===h&&
 // run load code
-b(this).siblings(".acf-imp-load-more").trigger("click"))}).on("acf-imp-loading",".acf-imp-browse-modal",function(){this.className+=" is-loading"}).on("acf-imp-loading-done",".acf-imp-browse-modal",function(){this.className=this.className.replace(" is-loading","")})}),Array.prototype.filter||(Array.prototype.filter=function(a){if(void 0===this||null===this)throw new TypeError;var b=Object(this),c=b.length>>>0;if("function"!=typeof a)throw new TypeError;for(var d=[],e=arguments.length>=2?arguments[1]:void 0,f=0;f<c;f++)if(f in b){var g=b[f];
+c.siblings(".acf-imp-load-more").trigger("click")):
+// bind value
+b("#"+c.data("value-input")).val(c.val())}).on("acf-imp-loading",".acf-imp-browse-modal",function(){this.className+=" is-loading"}).on("acf-imp-loading-done",".acf-imp-browse-modal",function(){this.className=this.className.replace(" is-loading","")})}),Array.prototype.filter||(Array.prototype.filter=function(a){if(void 0===this||null===this)throw new TypeError;var b=Object(this),c=b.length>>>0;if("function"!=typeof a)throw new TypeError;for(var d=[],e=arguments.length>=2?arguments[1]:void 0,f=0;f<c;f++)if(f in b){var g=b[f];
 // NOTE: Technically this should Object.defineProperty at
 //       the next index, as push can be affected by
 //       properties on Object.prototype and Array.prototype.

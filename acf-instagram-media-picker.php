@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: ACF Instagram Media Picker
- * Description: Allowed user to select media (image/video) from their Instagram account to submit
+ * Description: Allowed user to select latest/recent media (image/video) from their Instagram account to submit
  * Version: 1.0.0
  * Author: Nabeel Molham
  * Author URI: http://nabeel.molham.me/
@@ -73,6 +73,13 @@ class Plugin extends Singular
 	public $ajax;
 
 	/**
+	 * Instagram lib
+	 *
+	 * @var Instagram
+	 */
+	public $instagram;
+
+	/**
 	 * Initialization
 	 *
 	 * @return void
@@ -86,9 +93,10 @@ class Plugin extends Singular
 		spl_autoload_register( [ &$this, 'autoloader' ] );
 
 		// modules
-		$this->ajax     = Ajax_Handler::get_instance();
-		$this->backend  = Backend::get_instance();
-		$this->frontend = Frontend::get_instance();
+		$this->instagram = Instagram::get_instance();
+		$this->ajax      = Ajax_Handler::get_instance();
+		$this->backend   = Backend::get_instance();
+		$this->frontend  = Frontend::get_instance();
 
 		// plugin loaded hook
 		do_action_ref_array( 'acf_imp_loaded', [ &$this ] );

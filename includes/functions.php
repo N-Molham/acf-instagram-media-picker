@@ -8,6 +8,7 @@
  */
 
 use ACF\Add_Ons\Instagram_Media_Picker\Component;
+use ACF\Add_Ons\Instagram_Media_Picker\Instagram;
 use ACF\Add_Ons\Instagram_Media_Picker\Plugin;
 
 if ( !function_exists( 'acf_instagram_media_picker' ) ):
@@ -78,5 +79,17 @@ if ( !function_exists( 'acf_imp_version' ) ):
 	function acf_imp_version()
 	{
 		return acf_instagram_media_picker()->version;
+	}
+endif;
+
+if ( !function_exists( 'acf_imp_instagram' ) ):
+	/**
+	 * Get plugin Instagram instance
+	 *
+	 * @return Instagram
+	 */
+	function acf_imp_instagram()
+	{
+		return acf_instagram_media_picker()->instagram;
 	}
 endif;

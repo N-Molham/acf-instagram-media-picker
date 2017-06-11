@@ -6,22 +6,29 @@
 
 	$( function () {
 		// vars
-		var $current_field      = null,
-		    current_values      = null,
-		    ajax_request        = null,
-		    media_item_template = $( '#acf-imp-media-item-template' ).html();
+		var $current_value_input    = null,
+		    $current_button         = null,
+		    current_values          = null,
+		    $current_username_input = null,
+		    ajax_request            = null,
+		    is_loading              = false,
+		    media_item_template     = $( '#acf-imp-media-item-template' ).html();
 
 		// on browse modal open
-		$( '.acf-fields' ).on( 'show.bs.modal', '.acf-imp-browse-modal', function () {
+		$( '.acf-fields' ).on( 'show.bs.modal', '.acf-imp-browse-modal', function ( e ) {
 			// trigger load on
 			var $modal     = $( this ),
 			    $load_more = $modal.find( '.acf-imp-load-more' );
 
 			// current focused field input & value
-			$current_field = $( '#' + $modal.data( 'target-input' ) );
-			current_values = $current_field.val().split( ',' ).filter( function ( value ) {
+			$current_button         = $( e.relatedTarget );
+			$current_value_input    = $( '#' + $modal.data( 'value-input' ) );
+			$current_username_input = $( '#' + $modal.data( 'username-input' ) );
+			current_values          = $current_value_input.val().split( ',' ).filter( function ( value ) {
 				return value.trim().length > 0;
 			} );
+
+			$modal.find( '.acf-imp-username' ).val( $current_username_input.val() );
 
 			if ( 0 === $load_more.attr( 'data-max-id' ).length ) {
 				// trigger media load on first open
@@ -30,13 +37,30 @@
 		} )
 		// on value update
 		.on( 'acf-imp-update-value', '.acf-imp-browse-modal', function () {
-			// fetch values
-			current_values = $( this ).find( 'input[type=checkbox]:checked' ).map( function ( index, input ) {
-				return input.value;
-			} ).toArray();
+			var $selected_media = $( this ).find( 'input[type=checkbox]:checked' );
 
-			// update field
-			$current_field.val( current_values.join( ',' ) );
+			if ( $selected_media.length > $( this ).data( 'media-limit' ) ) {
+				// limit reached
+				$selected_media.each( function ( index, input ) {
+					if ( current_values.indexOf( input.value ) < 0 ) {
+						// remove selection from over limit
+						input.checked = false;
+					}
+				} );
+			} else {
+				// fetch values
+				current_values = $selected_media.map( function ( index, input ) {
+					return input.value;
+				} ).toArray();
+
+				// update field
+				$current_value_input.val( current_values.join( ',' ) );
+
+				if ( current_values.length ) {
+					// set selected media count
+					$current_button.text( $current_button.data( 'browse-label' ) + ' (' + current_values.length.toString() + ')' );
+				}
+			}
 		} )
 		// on item selection
 		.on( 'change', '.acf-imp-media-item input[type=checkbox]', function ( e ) {
@@ -61,12 +85,15 @@
 
 			// enable loading status
 			$modal.trigger( 'acf-imp-loading' );
+			is_loading = true;
+
+			var items_container = $modal.find( '.acf-imp-media-items' ).addClass( 'hide' );
 
 			// load data
 			ajax_request = $.post( acf_imp_media_picker.ajax_url, {
 				action  : 'fetch_instagram_media_items',
-				username: username,
-				max_id  : $load_more.attr( 'data-max-id' )
+				nonce   : acf_imp_media_picker.ajax_nonce,
+				username: username
 			}, function ( response ) {
 				if ( response.success ) {
 					// data found
@@ -74,29 +101,24 @@
 					    new_items  = [];
 
 					// walk through items list
-					for ( var i = 0, length = response.data.media_items.length; i < length; i++ ) {
-						media_item = response.data.media_items[ i ];
+					for ( var i = 0, length = response.data.length; i < length; i++ ) {
+						media_item = response.data[ i ];
 						// fill in placeholders
 						new_items.push(
-							media_item_template.replace( /\{id\}/g, media_item.media_id )
-							.replace( '{type}', media_item.media_type )
+							media_item_template.replace( /\{code\}/g, media_item.code )
+							.replace( '{type}', media_item.type )
 							.replace( '{thumbnail}', media_item.image.thumbnail )
-							.replace( /\{caption\}/g, media_item.caption )
 							.replace( '{likes}', media_item.counts.likes )
 							.replace( '{comments}', media_item.counts.comments )
+							.replace( '{checked}', current_values.indexOf( media_item.code ) > -1 ? 'checked="checked"' : '' )
 						);
 					}
 
 					// append the new items
-					$modal.find( '.acf-imp-media-items' ).append( new_items.join( '' ) );
+					items_container.html( new_items.join( '' ) );
 
-					if ( response.data.next_max_id ) {
-						// update load more data
-						$load_more.attr( 'data-max-id', response.data.next_max_id );
-					} else {
-						// no more to load after that
-						$load_more.addClass( 'hidden' );
-					}
+					// no more to load after that
+					$load_more.addClass( 'hidden' );
 				} else {
 					// error loading data
 					alert( response.data );
@@ -104,6 +126,8 @@
 			}, 'json' ).always( function () {
 				// disable loading status
 				$modal.trigger( 'acf-imp-loading-done' );
+				is_loading = false;
+				items_container.removeClass( 'hide' );
 			} );
 		} )
 		// on load more button clicked
@@ -116,13 +140,20 @@
 			$modal.trigger( 'acf-imp-load-media' );
 		} )
 		// on enter key pressed while focusing on username field
-		.on( 'keydown', '.acf-imp-username', function ( e ) {
-			if ( 13 === e.keyCode ) {
+		.on( 'keydown keyup', '.acf-imp-username', function ( e ) {
+			var $this = $( this );
+
+			if ( 'keydown' === e.type && 13 === e.keyCode ) {
 				// prevent from submitting the form
 				e.preventDefault();
 
-				// run load code
-				$( this ).siblings( '.acf-imp-load-more' ).trigger( 'click' );
+				if ( false === is_loading ) {
+					// run load code
+					$this.siblings( '.acf-imp-load-more' ).trigger( 'click' );
+				}
+			} else {
+				// bind value
+				$( '#' + $this.data( 'value-input' ) ).val( $this.val() );
 			}
 		} )
 		// on loading
