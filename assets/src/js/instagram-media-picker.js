@@ -12,19 +12,20 @@
 		    media_item_template = $( '#acf-imp-media-item-template' ).html();
 
 		// on browse modal open
-		$( '.gform_wrapper' ).on( 'show.bs.modal', '.acf-imp-browse-modal', function () {
+		$( '.acf-fields' ).on( 'show.bs.modal', '.acf-imp-browse-modal', function () {
 			// trigger load on
-			var $load_more = $( this ).find( '.acf-imp-load-more' );
+			var $modal     = $( this ),
+			    $load_more = $modal.find( '.acf-imp-load-more' );
 
 			// current focused field input & value
-			$current_field = $( '#' + $( this ).data( 'target-input' ) );
+			$current_field = $( '#' + $modal.data( 'target-input' ) );
 			current_values = $current_field.val().split( ',' ).filter( function ( value ) {
 				return value.trim().length > 0;
 			} );
 
 			if ( 0 === $load_more.attr( 'data-max-id' ).length ) {
 				// trigger media load on first open
-				$load_more.trigger( 'acf-imp-click' );
+				$load_more.trigger( 'acf-imp-click', [ $modal ] );
 			}
 		} )
 		// on value update
@@ -43,9 +44,15 @@
 			$( this ).closest( '.acf-imp-browse-modal' ).trigger( 'acf-imp-update-value' );
 		} )
 		// load media
-		.on( 'acf-imp-load-media', '.acf-imp-browse-modal', function ( e ) {
+		.on( 'acf-imp-load-media', '.acf-imp-browse-modal', function () {
 			var $modal     = $( this ),
+			    username   = $modal.find( '.acf-imp-username' ).val().trim().replace( /[^a-zA-Z0-9\._]/g, '' ),
 			    $load_more = $modal.find( '.acf-imp-load-more' );
+
+			if ( username.length < 3 ) {
+				// invalid username!
+				return true;
+			}
 
 			if ( ajax_request ) {
 				// terminate previous ongoing request
@@ -56,9 +63,10 @@
 			$modal.trigger( 'acf-imp-loading' );
 
 			// load data
-			ajax_request = $.post( slc_media_picker.ajax_url, {
-				action: 'fetch_instagram_media_items',
-				max_id: $load_more.attr( 'data-max-id' )
+			ajax_request = $.post( acf_imp_media_picker.ajax_url, {
+				action  : 'fetch_instagram_media_items',
+				username: username,
+				max_id  : $load_more.attr( 'data-max-id' )
 			}, function ( response ) {
 				if ( response.success ) {
 					// data found
@@ -99,9 +107,23 @@
 			} );
 		} )
 		// on load more button clicked
-		.on( 'click acf-imp-click', '.acf-imp-load-more', function () {
+		.on( 'click acf-imp-click', '.acf-imp-load-more', function ( e, $modal ) {
+			if ( undefined === $modal ) {
+				$modal = $( this ).closest( '.acf-imp-browse-modal' );
+			}
+
 			// load first/more media
-			$( this ).closest( '.acf-imp-browse-modal' ).trigger( 'acf-imp-load-media' );
+			$modal.trigger( 'acf-imp-load-media' );
+		} )
+		// on enter key pressed while focusing on username field
+		.on( 'keydown', '.acf-imp-username', function ( e ) {
+			if ( 13 === e.keyCode ) {
+				// prevent from submitting the form
+				e.preventDefault();
+
+				// run load code
+				$( this ).siblings( '.acf-imp-load-more' ).trigger( 'click' );
+			}
 		} )
 		// on loading
 		.on( 'acf-imp-loading', '.acf-imp-browse-modal', function () {

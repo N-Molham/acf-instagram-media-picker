@@ -12,6 +12,12 @@ use acf_field;
 
 class ACF_Field_Instagram_Media_Picker extends acf_field
 {
+	/**
+	 * Whither or not to load the media item template
+	 *
+	 * @var boolean
+	 */
+	protected static $load_item_template = true;
 
 	public function __construct()
 	{
@@ -27,6 +33,11 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 			'browse_button_label' => __( 'Browse Images', ACF_IMP_DOMAIN ),
 		];
 
+		// localization
+		$this->l10n = [
+			'invalid_username' => __( 'Invalid username!', ACF_IMP_DOMAIN ),
+		];
+
 		parent::__construct();
 	}
 
@@ -39,7 +50,15 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 	 */
 	public function render_field( $field_settings )
 	{
+		acf_imp_view( 'media_picker_field', compact( 'field_settings' ) );
+	}
 
+	public function input_admin_head()
+	{
+		if ( self::$load_item_template )
+		{
+			acf_imp_view( 'media_item_template' );
+		}
 	}
 
 	/**
@@ -53,17 +72,24 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 		$load_path      = Helpers::enqueue_path();
 		$assets_version = Helpers::assets_version();
 
+		// Bootstrap Modal assets
+		wp_register_style( 'acf-imp-bootstrap-modal', $load_path . 'css/bootstrap-modal.css', null, $assets_version );
+		wp_register_script( 'acf-imp-bootstrap-modal', $load_path . 'js/bootstrap-modal.js', [ 'jquery' ], $assets_version, true );
+
 		// picker assets
-		wp_enqueue_style( 'media-picker', $load_path . 'css/instagram-media-picker.css', [
-			'acf-imp-fontawesome',
+		wp_enqueue_style( 'acf-imp-media-picker', untrailingslashit( ACF_IMP_URI ) . '/assets/dist/css/instagram-media-picker.css', [
+			'dashicons',
 			'acf-imp-bootstrap-modal',
 		], $assets_version );
+
 		wp_enqueue_script( 'acf-imp-media-picker', $load_path . 'js/instagram-media-picker.js', [
 			'jquery',
 			'acf-imp-bootstrap-modal',
 		], $assets_version, true );
-		wp_localize_script( 'acf-imp-media-picker', 'slc_media_picker', [
-			'ajax_url' => admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ),
+
+		wp_localize_script( 'acf-imp-media-picker', 'acf_imp_media_picker', [
+			'ajax_url'   => admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ),
+			'field_name' => $this->name,
 		] );
 	}
 

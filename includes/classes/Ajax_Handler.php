@@ -28,6 +28,29 @@ class Ajax_Handler extends Component
 	}
 
 	/**
+	 * Fetch user's instagram account latest media items
+	 *
+	 * @return void
+	 */
+	public function fetch_instagram_media_items()
+	{
+		// logged-in user ID
+		$user_id = get_current_user_id();
+		$max_id  = sanitize_key( (string) filter_input( INPUT_POST, 'max_id', FILTER_SANITIZE_STRING ) );
+
+		$media_items = slc_user()->fetch_instagram_recent_media_items( $user_id, 9, $max_id );
+		if ( is_wp_error( $media_items ) )
+		{
+			// error loading media
+			$this->error( $media_items->get_error_message() );
+		}
+
+		// ajax success
+		$this->success( $media_items );
+	}
+
+
+	/**
 	 * AJAX Debug response
 	 *
 	 * @since 1.0.0
