@@ -40,7 +40,9 @@ class Ajax_Handler extends Component
 			$this->error( __( 'Invalid access!' ) );
 		}
 
+		// inputs
 		$username = preg_replace( '/[^a-zA-Z0-9\._]/', '', (string) filter_input( INPUT_POST, 'username', FILTER_SANITIZE_STRING ) );
+		$field_id = preg_replace( '/[^a-zA-Z0-9\._]/', '', (string) filter_input( INPUT_POST, 'field_id', FILTER_SANITIZE_STRING ) );
 
 		if ( empty( $username ) || strlen( $username ) < 3 )
 		{
@@ -48,7 +50,7 @@ class Ajax_Handler extends Component
 			$this->error( __( 'Invalid username!', ACF_IMP_DOMAIN ) );
 		}
 
-		$media_items = acf_imp_instagram()->fetch_instagram_recent_media_items( $username );
+		$media_items = acf_imp_instagram()->fetch_instagram_recent_media_items( $username, $field_id );
 		if ( is_wp_error( $media_items ) )
 		{
 			// error loading media

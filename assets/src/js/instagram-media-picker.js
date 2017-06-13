@@ -93,7 +93,8 @@
 			ajax_request = $.post( acf_imp_media_picker.ajax_url, {
 				action  : 'fetch_instagram_media_items',
 				nonce   : acf_imp_media_picker.ajax_nonce,
-				username: username
+				username: username,
+				field_id: $modal.closest( '.acf-field' ).data( 'key' )
 			}, function ( response ) {
 				if ( response.success ) {
 					// data found

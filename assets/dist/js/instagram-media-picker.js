@@ -31,7 +31,7 @@ g.abort(),
 // enable loading status
 a.trigger("acf-imp-loading"),h=!0;var f=a.find(".acf-imp-media-items").addClass("hide");
 // load data
-g=b.post(acf_imp_media_picker.ajax_url,{action:"fetch_instagram_media_items",nonce:acf_imp_media_picker.ajax_nonce,username:c},function(a){if(a.success){
+g=b.post(acf_imp_media_picker.ajax_url,{action:"fetch_instagram_media_items",nonce:acf_imp_media_picker.ajax_nonce,username:c,field_id:a.closest(".acf-field").data("key")},function(a){if(a.success){
 // walk through items list
 for(var b=null,c=[],g=0,h=a.data.length;g<h;g++)b=a.data[g],
 // fill in placeholders

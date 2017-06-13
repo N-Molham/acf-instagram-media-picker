@@ -23,12 +23,25 @@ class Instagram extends Component
 	 * Fetch user's instagram account latest/recent media items
 	 *
 	 * @param string $username
+	 * @param string $field_id
 	 *
 	 * @return array|WP_Error
 	 */
-	public function fetch_instagram_recent_media_items( $username )
+	public function fetch_instagram_recent_media_items( $username, $field_id = '' )
 	{
-		$media_cache_key = 'acf_instagram_media_' . $username;
+		// cache args
+		$media_cache_key  = 'acf_instagram_media_' . $username;
+		$media_cache_time = HOUR_IN_SECONDS;
+
+		if ( '' !== $field_id )
+		{
+			$acf_field = get_field_object( $field_id );
+			if ( is_array( $acf_field ) && isset( $acf_field['data_cache_hours'] ) )
+			{
+				// use field's cache settings
+				$media_cache_time = absint( $acf_field['data_cache_hours'] ) * HOUR_IN_SECONDS;
+			}
+		}
 
 		// load from cache first
 		$media_items = get_transient( $media_cache_key );
@@ -82,7 +95,7 @@ class Instagram extends Component
 			unset( $media_item );
 
 			// cache it
-			set_transient( $media_cache_key, $media_items, HOUR_IN_SECONDS );
+			set_transient( $media_cache_key, $media_items, $media_cache_time );
 		}
 
 		return $media_items;

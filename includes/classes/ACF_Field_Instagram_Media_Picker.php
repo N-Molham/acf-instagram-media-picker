@@ -31,6 +31,7 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 			'media_type'          => 'image',
 			'media_limit'         => 1,
 			'browse_button_label' => __( 'Browse Images', ACF_IMP_DOMAIN ),
+			'data_cache_hours'    => 1,
 		];
 
 		// localization
@@ -138,6 +139,17 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 			'type'         => 'text',
 			'name'         => 'browse_button_label',
 			'required'     => true,
+		] );
+
+		// data cache hours setting
+		acf_render_field_setting( $field_settings, [
+			'label'        => __( 'Data Cache Duration', ACF_IMP_DOMAIN ),
+			'instructions' => __( 'For how long should the user fetched instagram media items list be cached for? in hours, <code>0</code> to disable cache', ACF_IMP_DOMAIN ),
+			'type'         => 'number',
+			'name'         => 'data_cache_hours',
+			'required'     => true,
+			'min'          => 0,
+			'step'         => 1,
 		] );
 	}
 }
