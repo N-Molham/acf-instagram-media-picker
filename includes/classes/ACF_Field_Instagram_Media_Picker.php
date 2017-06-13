@@ -72,6 +72,11 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 		}
 
 		$media_codes = array_filter( array_map( 'trim', explode( ',', $value['images'] ) ) );
+		if ( $field['media_limit'] !== count( $media_codes ) )
+		{
+			return sprintf( __( '%s media required.', ACF_IMP_DOMAIN ), $field['media_limit'] );
+		}
+
 		foreach ( $media_codes as $media_code )
 		{
 			$media_data = acf_imp_instagram()->get_media_data( $media_code, $value['username'] );
@@ -84,6 +89,11 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 			{
 				return __( 'Selected media is not owned by that user!', ACF_IMP_DOMAIN );
 			}
+
+			if ( $media_data['type'] !== $field['media_type'] )
+			{
+				return __( 'Selected media is not the correct type!', ACF_IMP_DOMAIN );
+			}
 		}
 
 		return $valid;
@@ -91,8 +101,6 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 
 	/**
 	 * When data is saved
-	 *
-	 * @TODO save cached media objects
 	 *
 	 * @param array $value
 	 * @param int   $post_id
