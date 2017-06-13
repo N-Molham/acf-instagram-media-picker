@@ -37,9 +37,10 @@
 		} )
 		// on value update
 		.on( 'acf-imp-update-value', '.acf-imp-browse-modal', function () {
-			var $selected_media = $( this ).find( 'input[type=checkbox]:checked' );
+			var $modal          = $( this ),
+			    $selected_media = $modal.find( 'input[type=checkbox]:checked' );
 
-			if ( $selected_media.length > $( this ).data( 'media-limit' ) ) {
+			if ( $selected_media.length > $modal.data( 'media-limit' ) ) {
 				// limit reached
 				$selected_media.each( function ( index, input ) {
 					if ( current_values.indexOf( input.value ) < 0 ) {
@@ -61,6 +62,9 @@
 					$current_button.text( $current_button.data( 'browse-label' ) + ' (' + current_values.length.toString() + ')' );
 				}
 			}
+
+			$modal.find( '.acf-imp-media-item' ).removeClass( 'active' );
+			$modal.find( 'input[type=checkbox]:checked' ).closest( '.acf-imp-media-item' ).addClass( 'active' );
 		} )
 		// on item selection
 		.on( 'change', '.acf-imp-media-item input[type=checkbox]', function ( e ) {
@@ -104,14 +108,19 @@
 					// walk through items list
 					for ( var i = 0, length = response.data.length; i < length; i++ ) {
 						media_item = response.data[ i ];
+
+						// if item is selected or not
+						media_item.selected = current_values.indexOf( media_item.code ) > -1;
+
 						// fill in placeholders
 						new_items.push(
 							media_item_template.replace( /\{code\}/g, media_item.code )
 							.replace( '{type}', media_item.type )
 							.replace( '{thumbnail}', media_item.image.thumbnail )
-							.replace( '{likes}', media_item.counts.likes )
-							.replace( '{comments}', media_item.counts.comments )
-							.replace( '{checked}', current_values.indexOf( media_item.code ) > -1 ? 'checked="checked"' : '' )
+							.replace( '{likes}', number_format( media_item.counts.likes, 0 ) )
+							.replace( '{comments}', number_format( media_item.counts.comments, 0 ) )
+							.replace( '{active}', media_item.selected ? 'active' : '' )
+							.replace( '{checked}', media_item.selected ? 'checked="checked"' : '' )
 						);
 					}
 
@@ -166,6 +175,41 @@
 			this.className = this.className.replace( ' is-loading', '' );
 		} );
 	} );
+
+	function number_format( num, digits ) {
+		var si = [
+			{
+				value : 1E18,
+				symbol: "E"
+			},
+			{
+				value : 1E15,
+				symbol: "P"
+			},
+			{
+				value : 1E12,
+				symbol: "T"
+			},
+			{
+				value : 1E9,
+				symbol: "G"
+			},
+			{
+				value : 1E6,
+				symbol: "M"
+			},
+			{
+				value : 1E3,
+				symbol: "k"
+			}
+		], rx  = /\.0+$|(\.[0-9]*[1-9])0+$/, i;
+		for ( i = 0; i < si.length; i++ ) {
+			if ( num >= si[ i ].value ) {
+				return (num / si[ i ].value).toFixed( digits ).replace( rx, "$1" ) + si[ i ].symbol;
+			}
+		}
+		return num.toFixed( digits ).replace( rx, "$1" );
+	}
 
 	if ( !Array.prototype.filter ) {
 		Array.prototype.filter = function ( callback ) {

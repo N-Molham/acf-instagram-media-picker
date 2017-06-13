@@ -22,23 +22,28 @@
 		margin: 14px 0 0 0;
 		@include flexbox();
 		@include flex-wrap(wrap);
-		@include justify-content(space-between);
+		@include justify-content(space-around);
 	}
 
 	.acf-imp-media-item {
-		margin: 8px !important;
+		margin: 2px !important;
+		padding: 6px;
 		label, span {
 			display: block;
+		}
+
+		&.active {
+			background: #eee;
 		}
 
 		span.dashicons {
 			display: inline-block;
 		}
-		
+
 		label {
 			cursor: pointer;
 		}
-		
+
 		.acf-imp-media-item-image {
 			max-width: 170px;
 		}
