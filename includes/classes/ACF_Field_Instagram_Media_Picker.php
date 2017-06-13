@@ -43,6 +43,75 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 	}
 
 	/**
+	 * Validate field value
+	 *
+	 * @param boolean $valid
+	 * @param array   $value
+	 * @param array   $field
+	 * @param string  $input_name
+	 *
+	 * @return boolean
+	 */
+	public function validate_value( $valid, $value, $field, $input_name )
+	{
+		$value = filter_var_array( $value, [
+			'images'   => [
+				'filter'  => FILTER_VALIDATE_REGEXP,
+				'options' => [ 'regexp' => '/^[a-zA-Z0-9]+((\,[a-zA-Z0-9]+)?)+$/' ],
+			],
+			'username' => [
+				'filter'  => FILTER_VALIDATE_REGEXP,
+				'options' => [ 'regexp' => '/^[a-zA-Z0-9\._]+$/' ],
+			],
+		] );
+
+		if ( 2 !== count( $value ) )
+		{
+			// data is not in valid format
+			return __( 'Invalid media data format!', ACF_IMP_DOMAIN );
+		}
+
+		$media_codes = array_filter( array_map( 'trim', explode( ',', $value['images'] ) ) );
+		foreach ( $media_codes as $media_code )
+		{
+			$media_data = acf_imp_instagram()->get_media_data( $media_code, $value['username'] );
+			if ( is_wp_error( $media_data ) )
+			{
+				return __( 'Error loading media data for given information!', ACF_IMP_DOMAIN );
+			}
+
+			if ( $media_data['owner']['username'] !== $value['username'] || $media_data['code'] !== $media_code )
+			{
+				return __( 'Selected media is not owned by that user!', ACF_IMP_DOMAIN );
+			}
+		}
+
+		return $valid;
+	}
+
+	/**
+	 * When data is saved
+	 *
+	 * @TODO save cached media objects
+	 *
+	 * @param array $value
+	 * @param int   $post_id
+	 * @param array $field
+	 *
+	 * @return array
+	 */
+	public function update_value( $value, $post_id, $field )
+	{
+		$media_codes = array_filter( array_map( 'trim', explode( ',', $value['images'] ) ) );
+		foreach ( $media_codes as $media_code )
+		{
+			acf_imp_instagram()->store_media_data( $media_code, $value['username'], $post_id );
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Render field output
 	 *
 	 * @param array $field_settings
@@ -144,11 +213,11 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 		// data cache hours setting
 		acf_render_field_setting( $field_settings, [
 			'label'        => __( 'Data Cache Duration', ACF_IMP_DOMAIN ),
-			'instructions' => __( 'For how long should the user fetched instagram media items list be cached for? in hours, <code>0</code> to disable cache', ACF_IMP_DOMAIN ),
+			'instructions' => __( 'For how long should the user fetched instagram media items list be cached for? in hours', ACF_IMP_DOMAIN ),
 			'type'         => 'number',
 			'name'         => 'data_cache_hours',
 			'required'     => true,
-			'min'          => 0,
+			'min'          => 1,
 			'step'         => 1,
 		] );
 	}
