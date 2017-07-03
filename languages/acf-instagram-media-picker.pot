@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License, version 3, http://www.gnu.org/licenses/gpl-3.0.en.html.
 msgid ""
 msgstr ""
-"Project-Id-Version: ACF Instagram Media Picker 1.0.0\n"
+"Project-Id-Version: ACF Instagram Media Picker 1.1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/acf-instagram-media-picker\n"
-"POT-Creation-Date: 2017-06-13 16:56:26+00:00\n"
+"POT-Creation-Date: 2017-07-03 09:53:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,63 +42,67 @@ msgstr ""
 msgid "Invalid username!"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:71
-msgid "Invalid media data format!"
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:70
+msgid "<b>%s</b>: Invalid media data format!"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:77
-msgid "%s media required."
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:76
+msgid "<b>%s</b>: %s media required."
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:85
-msgid "Error loading media data for given information!"
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:84
+msgid "<b>%s</b>: Error loading media data for given information!"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:90
-msgid "Selected media is not owned by that user!"
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:89
+msgid "<b>%s</b>: Selected media is not owned by that user!"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:95
-msgid "Selected media is not the correct type!"
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:94
+msgid "<b>%s</b>: Selected media is not the correct type!"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:191
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:189
 msgid "Media Type"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:192
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:190
 msgid "What type of instagram media type to choose from?"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:196
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:194
 msgid "Image"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:197
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:195
 msgid "Video"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:203
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:196
+msgid "Both"
+msgstr ""
+
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:202
 msgid "Number of Media Items"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:204
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:203
 msgid "How many items required to be picked?"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:214
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:213
 msgid "Browse button label"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:215
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:214
 msgid "What is the label of the media browse button?"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:223
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:222
 msgid "Data Cache Duration"
 msgstr ""
 
-#: includes/classes/ACF_Field_Instagram_Media_Picker.php:224
+#: includes/classes/ACF_Field_Instagram_Media_Picker.php:223
 msgid ""
 "For how long should the user fetched instagram media items list be cached "
 "for? in hours"

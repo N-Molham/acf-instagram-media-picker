@@ -48,11 +48,10 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 	 * @param boolean $valid
 	 * @param array   $value
 	 * @param array   $field
-	 * @param string  $input_name
 	 *
 	 * @return boolean
 	 */
-	public function validate_value( $valid, $value, $field, $input_name )
+	public function validate_value( $valid, $value, $field )
 	{
 		$value = filter_var_array( $value, [
 			'images'   => [
@@ -68,13 +67,13 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 		if ( 2 !== count( $value ) )
 		{
 			// data is not in valid format
-			return __( 'Invalid media data format!', ACF_IMP_DOMAIN );
+			return sprintf( __( '<b>%s</b>: Invalid media data format!', ACF_IMP_DOMAIN ), $field['label'] );
 		}
 
 		$media_codes = array_filter( array_map( 'trim', explode( ',', $value['images'] ) ) );
 		if ( $field['media_limit'] !== count( $media_codes ) )
 		{
-			return sprintf( __( '%s media required.', ACF_IMP_DOMAIN ), $field['media_limit'] );
+			return sprintf( __( '<b>%s</b>: %s media required.', ACF_IMP_DOMAIN ), $field['label'], $field['media_limit'] );
 		}
 
 		foreach ( $media_codes as $media_code )
@@ -82,17 +81,17 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 			$media_data = acf_imp_instagram()->get_media_data( $media_code, $value['username'] );
 			if ( is_wp_error( $media_data ) )
 			{
-				return __( 'Error loading media data for given information!', ACF_IMP_DOMAIN );
+				return sprintf( __( '<b>%s</b>: Error loading media data for given information!', ACF_IMP_DOMAIN ), $field['label'] );
 			}
 
-			if ( $media_data['owner']['username'] !== $value['username'] || $media_data['code'] !== $media_code )
+			if ( $media_data['code'] !== $media_code || $media_data['owner']['username'] !== $value['username'] )
 			{
-				return __( 'Selected media is not owned by that user!', ACF_IMP_DOMAIN );
+				return sprintf( __( '<b>%s</b>: Selected media is not owned by that user!', ACF_IMP_DOMAIN ), $field['label'] );
 			}
 
-			if ( $media_data['type'] !== $field['media_type'] )
+			if ( 'both' !== $field['media_type'] && $media_data['type'] !== $field['media_type'] )
 			{
-				return __( 'Selected media is not the correct type!', ACF_IMP_DOMAIN );
+				return sprintf( __( '<b>%s</b>: Selected media is not the correct type!', ACF_IMP_DOMAIN ), $field['label'] );
 			}
 		}
 
@@ -104,11 +103,10 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 	 *
 	 * @param array $value
 	 * @param int   $post_id
-	 * @param array $field
 	 *
 	 * @return array
 	 */
-	public function update_value( $value, $post_id, $field )
+	public function update_value( $value, $post_id )
 	{
 		$media_codes = array_filter( array_map( 'trim', explode( ',', $value['images'] ) ) );
 		foreach ( $media_codes as $media_code )
@@ -195,6 +193,7 @@ class ACF_Field_Instagram_Media_Picker extends acf_field
 			'choices'      => [
 				'image' => __( 'Image', ACF_IMP_DOMAIN ),
 				'video' => __( 'Video', ACF_IMP_DOMAIN ),
+				'both'  => __( 'Both', ACF_IMP_DOMAIN ),
 			],
 		] );
 

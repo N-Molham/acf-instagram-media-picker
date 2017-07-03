@@ -3,7 +3,7 @@
 /**
  * Plugin Name: ACF Instagram Media Picker
  * Description: Allowed user to select latest/recent media (image/video) from their Instagram account to submit
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Nabeel Molham
  * Author URI: http://nabeel.molham.me/
  * Text Domain: acf-instagram-media-picker
@@ -49,7 +49,7 @@ class Plugin extends Singular
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0';
+	public $version = '1.1.0';
 
 	/**
 	 * Backend
